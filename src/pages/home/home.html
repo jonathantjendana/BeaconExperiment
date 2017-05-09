@@ -1,0 +1,86 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>
+      My Beacons
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content>
+  <!--<ion-list no-lines>
+
+    <ion-item *ngFor="let beacon of beacons">
+      <ion-grid>
+        <ion-row>
+          <ion-col>Major</ion-col>
+          <ion-col>{{beacon.major}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>Minor</ion-col>
+          <ion-col>{{beacon.minor}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col>RSSI</ion-col>
+          <ion-col>{{beacon.rssi}}</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+  </ion-list>-->
+
+  <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    viewBox="0 0 1242 2208" style="enable-background:new 0 0 1242 2208;" xml:space="preserve">
+    <style type="text/css">
+      .st0 {
+        fill: #FFFFFF;
+        stroke: #000000;
+        stroke-miterlimit: 10;
+      }
+      
+      .st1 {
+        stroke: #000000;
+        stroke-miterlimit: 10;
+      }
+      
+      .st2 {
+        fill: #FF0000;
+        stroke: #000000;
+        stroke-miterlimit: 10;
+      }
+      
+      .st3 {
+        font-family: 'MyriadPro-Regular';
+      }
+      
+      .st4 {
+        font-size: 72px;
+      }
+      
+      .st5 {
+        fill: #FFFFFF;
+      }
+    </style>
+
+    <!--<div id="r1" >hi</div>-->
+    <rect x="376.5" y="19.5" class="st0" width="662" height="2137" />
+    <rect x="456.3" y="1818.4" width="562.8" height="303.2" [ngClass]="lemon" />
+    <rect x="456.3" y="1496.3" width="562.8" height="303.2" [ngClass]="candy" />
+    <rect x="456.3" y="1175.1" width="562.8" height="303.2" [ngClass]="beetroot" />
+    <rect x="456.3" y="784.9" width="562.8" height="303.2" [ngClass]="ice" />
+    <rect x="456.3" y="377.7" width="562.8" height="303.2" [ngClass]="mint" />
+    <rect x="456.3" y="53.5" width="562.8" height="303.2" [ngClass]="blueberry" />
+    <rect x="456.5" y="697.5" class="st2" width="563" height="72" />
+    <rect x="456.5" y="1098.5" class="st2" width="563" height="65" />
+    <text transform="matrix(1 0 0 1 240 1780.333)" class="st3 st4"> </text>
+    <text transform="matrix(1 0 0 1 642 1997)" class="st5 st3 st4">T2031</text>
+    <text transform="matrix(1 0 0 1 635 1675.333)" class="st5 st3 st4">T2032</text>
+    <text transform="matrix(1 0 0 1 631.3335 1348.333)" class="st5 st3 st4">T2033</text>
+    <text transform="matrix(1 0 0 1 631.3335 956.3335)" class="st5 st3 st4">T2034</text>
+    <text transform="matrix(1 0 0 1 614.3335 755.3335)" class="st5 st3 st4">T2034A</text>
+    <text transform="matrix(1 0 0 1 635.333 548)" class="st5 st3 st4">T2035</text>
+    <text transform="matrix(1 0 0 1 648 221)" class="st5 st3 st4">T2036</text>
+  </svg>
+
+
+  <button (click)="getBeaconInfo()">getBeaconInfo</button>
+</ion-content>

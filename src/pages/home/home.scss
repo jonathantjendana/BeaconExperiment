@@ -1,0 +1,28 @@
+page-home {
+#Region path{
+	display:none;
+}
+
+#r1 path {
+    display: block;
+}
+.animate{
+animation-name: myanimation;
+animation-duration:3s;
+fill:red;
+}
+
+@-webkit-keyframes myanimation {
+    from{fill:red;}
+	to {fill:yellow;}
+}
+@-moz-keyframes myanimation {
+    from{fill:red;}
+	to {fill:yellow;}
+}
+@keyframes myanimation { 
+    from{fill:red;}
+	to {fill:yellow;}
+}
+
+}
