@@ -1,7 +1,7 @@
 // core stuff
 import { Component, ElementRef } from '@angular/core';
 import { NavController, Platform, Events, AlertController } from 'ionic-angular';
-import { NgZone } from "@angular/core";
+import { NgZone, Renderer } from "@angular/core";
 
 // plugins
 import { IBeacon } from 'ionic-native';
@@ -28,7 +28,8 @@ export class HomePage {
   ];
   // beacons: any = [];
   beaconRegions: any = [];
-  regionList: any = ['lemon', 'candy', 'beetroot', 'ice', 'mint', 'blueberry'];
+  // regionList: any = ['lemon', 'candy', 'beetroot', 'ice', 'mint', 'blueberry'];
+  regionList: any = ['T2036', 'T2035', 'T2034', 'T2033', 'T2032', 'T2031'];
 
   inRegions: any = [];
 
@@ -37,27 +38,23 @@ export class HomePage {
   // beacons: BeaconModel[] = [];
   zone: any;
   lemon: any = {
-    'st1': true,
-    'animate': false
+    'animate': true
   }
   candy: any = {
-    'st1': true,
     'animate': false
   }
   beetroot: any = {
-    'st1': true,
+
     'animate': false
   }
   ice: any = {
-    'st1': true,
+
     'animate': false
   }
   mint: any = {
-    'st1': true,
     'animate': false
   }
   blueberry: any = {
-    'st1': true,
     'animate': false
   }
 
@@ -67,7 +64,9 @@ export class HomePage {
     public beaconProvider: BeaconProvider,
     public events: Events,
     public elref: ElementRef,
-    public alertCtrl: AlertController) {
+    public alertCtrl: AlertController,
+    private renderer: Renderer
+  ) {
     // required for UI update
     this.zone = new NgZone({ enableLongStackTrace: false });
 
@@ -124,27 +123,28 @@ export class HomePage {
   ionViewDidLoad() {
     this.platform.ready().then(() => {
       // this.beaconProvider.getAllBeacons().then((beaconResult) => {
-        // console.dir(beaconResult);
-        // this.beacons = beaconResult.json();
-        console.dir(this.beacons);
-        this.beaconProvider.initialise().then((isInitialised) => {
-          if (isInitialised) {
-            cordova.plugins.locationManager.enableBluetooth();
+      // console.dir(beaconResult);
+      // this.beacons = beaconResult.json();
+      console.dir(this.beacons);
+      this.beaconProvider.initialise().then((isInitialised) => {
+        if (isInitialised) {
+          cordova.plugins.locationManager.enableBluetooth();
 
-            this.listenToBeaconEvents();
+          this.listenToBeaconEvents();
 
-          }
-        });
-      })
+        }
+      });
+    })
 
     // });
   }
 
-  // getBeaconInfo() {
-  //   this.beaconProvider.getAllBeacons().then(function (tokenResult) {
-  //     console.dir(tokenResult);
-  //   })
-  // }
+  getBeaconInfo() {
+    var T2036 = this.elref.nativeElement.querySelector('#T2036');
+    // let oldClasses = T2036.getAttribute('class'); 
+    this.renderer.setElementAttribute(T2036, "class", 'animate');
+    console.log(T2036);
+  }
 
   listenToBeaconEvents() {
     cordova.plugins.locationManager.enableBluetooth();
@@ -242,6 +242,7 @@ export class HomePage {
 
             if (this.beaconIsFound(this.beacons[b], this.nearestBeacon)) {
               console.log('nearest beacon is ' + this.beacons[b].identifier);
+              
               this.updateUI(this.beacons[b].identifier);
             }
           }
@@ -405,25 +406,62 @@ export class HomePage {
     // });
   }
 
+  blink(id) {
+    console.log(id);
+    for (let i = 0; i < this.regionList.length; i++) {
+
+      if (id == this.regionList[i]) {
+        var target = this.elref.nativeElement.querySelector('#' + this.regionList[i]);
+        console.log(target);
+        // let oldClasses = T2036.getAttribute('class'); 
+        this.renderer.setElementAttribute(target, "class", 'animate');
+
+      } else {
+        var target = this.elref.nativeElement.querySelector('#' + this.regionList[i]);
+        // let oldClasses = T2036.getAttribute('class'); 
+        
+        this.renderer.setElementAttribute(target, "class", '');
+      }
+
+
+
+    }
+  }
+
   updateUI(nearBeaconIdentifier) {
+    console.log(nearBeaconIdentifier);
     switch (nearBeaconIdentifier) {
       case 'lemon':
-        this.zone.run(() => this.lemonBlink());
+        this.zone.run(() => {
+          this.blink(this.regionList[0]);
+        });
+
+
         break;
       case 'candy':
-        this.zone.run(() => this.candyBlink());
+        this.zone.run(() => {
+          this.blink(this.regionList[1]);
+        });
         break;
       case 'beetroot':
-        this.zone.run(() => this.beetrootBlink());
+        this.zone.run(() => {
+          this.blink(this.regionList[2]);
+        });
         break;
       case 'ice':
-        this.zone.run(() => this.iceBlink());
+        this.zone.run(() => {
+          this.blink(this.regionList[3]);
+        });
         break;
       case 'mint':
-        this.zone.run(() => this.mintBlink());
+        this.zone.run(() => {
+          this.blink(this.regionList[4]);
+        });
         break;
       case 'blueberry':
-        this.zone.run(() => this.blueberryBlink());
+        this.zone.run(() => {
+          this.blink(this.regionList[5])
+        });
         break;
       default:
         this.zone.run(() => this.showAlert('You are not in the hilltop area'))
