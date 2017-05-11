@@ -19,12 +19,12 @@ declare var cordova: any;
   templateUrl: 'home.html'
 })
 export class HomePage {
-  beacons = [{ identifier: 'lemon', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 38948, minor: 18761 },
-  { identifier: 'candy', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 14365, minor: 29583 },
-  { identifier: 'beetroot', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 27065, minor: 2371 },
-  { identifier: 'ice', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 16381, minor: 53866 },
-  { identifier: 'mint', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 60141, minor: 18428 },
-  { identifier: 'blueberry', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 2290, minor: 9216 }
+  beacons = [{ identifier: 'lemon', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 38948, minor: 18761, distance: 0 },
+  { identifier: 'candy', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 14365, minor: 29583, distance: 0 },
+  { identifier: 'beetroot', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 27065, minor: 2371, distance: 0 },
+  { identifier: 'ice', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 16381, minor: 53866, distance: 0 },
+  { identifier: 'mint', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 60141, minor: 18428, distance: 0 },
+  { identifier: 'blueberry', uuid: 'B9407F30-F5F8-466E-AFF9-25556B57FE6D', major: 2290, minor: 9216, distance: 0 }
   ];
   // beacons: any = [];
   beaconRegions: any = [];
@@ -235,6 +235,12 @@ export class HomePage {
       let noOfBeacons = data.beacons.length;
       //got beacons detected
       if (noOfBeacons > 0) {
+        for (var i=0; i< this.beacons.length; i++){
+		      if (this.beaconIsFound(this.beacons[i], data.beacons[0])){
+			     this.beacons[i].distance = data.beacons[0].rssi;
+				 this.zone.run(() => this.beacons[i].distance = data.beacons[0].rssi); 
+			  } //end if		  
+		   } //end for
         //assign the first detected beacons as the nearest beacon
         if (!this.nearestBeacon) {
           this.nearestBeacon = data.beacons[0];
@@ -434,6 +440,7 @@ export class HomePage {
       case 'lemon':
         this.zone.run(() => {
           this.blink(this.regionList[0]);
+          
         });
 
 
@@ -480,8 +487,9 @@ export class HomePage {
       for (let b = 0; b < this.beacons.length; b++) {
         if (this.beaconIsFound(this.beacons[b], this.nearestBeacon)) {
           console.log(this.beacons[b].identifier);
-
+          this.beacons[b].distance = nearest.rssi;
           this.updateUI(this.beacons[b].identifier);
+
         }
       }
       // this.updateUI(this.nearestBeacon.identifier);
