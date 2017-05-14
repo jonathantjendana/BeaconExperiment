@@ -1,4 +1,15 @@
 page-home {
+
+#svg-id{
+    display: inline; 
+    width: inherit; 
+    min-width: inherit; 
+    max-width: inherit; 
+    height: inherit; 
+    min-height: inherit; 
+    max-height: inherit;
+}
+
 #Region path{
 	display:none;
 }

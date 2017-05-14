@@ -12,6 +12,10 @@ import { BeaconProvider } from '../../providers/beacon-provider'
 // models
 import { BeaconModel } from '../../models/beacon-model';
 
+import * as svgPanZoom from 'svg-pan-zoom';
+import * as Hammer from 'hammerjs';
+
+
 declare var cordova: any;
 
 @Component({
@@ -126,6 +130,58 @@ export class HomePage {
       // console.dir(beaconResult);
       // this.beacons = beaconResult.json();
       console.dir(this.beacons);
+
+      let eventsHandler = {
+        haltEventListeners: ['touchstart', 'touchend', 'touchmove', 'touchleave', 'touchcancel'],
+        init: function (options) {
+          var instance = options.instance, initialScale = 1, pannedX = 0, pannedY = 0;
+          this.hammer = Hammer(options.svgElement, {
+            inputClass: Hammer.SUPPORT_POINTER_EVENTS ? Hammer.PointerEventInput : Hammer.TouchInput
+          })
+
+          this.hammer.get('pinch').set({ enable: true });
+
+          this.hammer.on('pinchstart pinchmove', function (ev) {
+            // On pinch start remember initial zoom
+            if (ev.type === 'pinchstart') {
+              initialScale = instance.getZoom()
+              instance.zoom(initialScale * ev.scale)
+            }
+            instance.zoom(initialScale * ev.scale)
+          })
+
+          this.hammer.on('panstart panmove', function (ev) {
+            // On pan start reset panned variables
+            if (ev.type === 'panstart') {
+              pannedX = 0
+              pannedY = 0
+            }
+            // Pan only the difference
+            instance.panBy({ x: ev.deltaX - pannedX, y: ev.deltaY - pannedY })
+            pannedX = ev.deltaX
+            pannedY = ev.deltaY
+          })
+        },
+        destroy: function () {
+          this.hammer.destroy();
+        }
+      }
+      var div = this.elref.nativeElement.querySelector('#svg-id');
+      console.log(div);
+      let panZoomInstance = svgPanZoom(div, {
+        zoomEnabled: true,
+        controlIconsEnabled: false,
+        fit: false,
+        center: true,
+        minZoom: 0.1,
+        customEventsHandler: eventsHandler
+      });
+      // // panZoomInstance.zoomBy(2.5);
+      // panZoomInstance.pan({x: 15, y: 120})
+      // panZoomInstance.zoomBy(2.5);
+      panZoomInstance.panBy({ x: 18, y: 220 });
+      panZoomInstance.zoomBy(3);
+
       this.beaconProvider.initialise().then((isInitialised) => {
         if (isInitialised) {
           cordova.plugins.locationManager.enableBluetooth();
@@ -235,12 +291,12 @@ export class HomePage {
       let noOfBeacons = data.beacons.length;
       //got beacons detected
       if (noOfBeacons > 0) {
-        for (var i=0; i< this.beacons.length; i++){
-		      if (this.beaconIsFound(this.beacons[i], data.beacons[0])){
-			     this.beacons[i].distance = data.beacons[0].rssi;
-				 this.zone.run(() => this.beacons[i].distance = data.beacons[0].rssi); 
-			  } //end if		  
-		   } //end for
+        for (var i = 0; i < this.beacons.length; i++) {
+          if (this.beaconIsFound(this.beacons[i], data.beacons[0])) {
+            this.beacons[i].distance = data.beacons[0].rssi;
+            this.zone.run(() => this.beacons[i].distance = data.beacons[0].rssi);
+          } //end if		  
+        } //end for
         //assign the first detected beacons as the nearest beacon
         if (!this.nearestBeacon) {
           this.nearestBeacon = data.beacons[0];
@@ -248,7 +304,7 @@ export class HomePage {
 
             if (this.beaconIsFound(this.beacons[b], this.nearestBeacon)) {
               console.log('nearest beacon is ' + this.beacons[b].identifier);
-              
+
               this.updateUI(this.beacons[b].identifier);
             }
           }
@@ -418,14 +474,18 @@ export class HomePage {
 
       if (id == this.regionList[i]) {
         var target = this.elref.nativeElement.querySelector('#' + this.regionList[i]);
-        console.log(target);
-        // let oldClasses = T2036.getAttribute('class'); 
-        this.renderer.setElementAttribute(target, "class", 'animate');
+        // console.log(target);
+        let oldClasses = target.getAttribute('class');
+        if (!oldClasses) {
+          console.log(oldClasses);
+          this.renderer.setElementAttribute(target, "class", 'animate');
+        }
+
 
       } else {
         var target = this.elref.nativeElement.querySelector('#' + this.regionList[i]);
         // let oldClasses = T2036.getAttribute('class'); 
-        
+
         this.renderer.setElementAttribute(target, "class", '');
       }
 
@@ -440,7 +500,7 @@ export class HomePage {
       case 'lemon':
         this.zone.run(() => {
           this.blink(this.regionList[0]);
-          
+
         });
 
 
